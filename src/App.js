@@ -15,7 +15,7 @@ export default class App extends Component {
     this.handleSubmit= this.handleSubmit.bind(this);
   }
   componentDidMount(){
-    axios.get('http://localhost:4000/memes').then((res)=>{
+    axios.get('https://xmeme-backend12.herokuapp.com/memes').then((res)=>{
       console.log(res.data)
       this.setState({
         memes:res.data
@@ -43,13 +43,20 @@ export default class App extends Component {
             url:this.state.url,
             caption:this.state.caption
     }
-    axios.post('http://localhost:4000/memes',{
+    axios.post('https://xmeme-backend12.herokuapp.com/memes',{
         meme
-    } ,config).then(()=>{})
+    } ,config).then(()=>{
+      axios.get('https://xmeme-backend12.herokuapp.com/memes').then((res)=>{
+        console.log(res.data)
+        this.setState({
+          memes:res.data
+        })
+      })
+    })
       .catch(function (err) {
         console.log(err);
       });
-
+    
     event.preventDefault();
   }
 
@@ -87,6 +94,16 @@ export default class App extends Component {
         <h1 className="my-5">Memes</h1>
         <div className="row">
        {/* LOOP OVER MEMES */}
+       {this.state.memes.map((meme)=>{
+         return <div className="card" style={{width: '18rem'}}>
+           <img src={meme.url} className="card-img-top" alt="..." style={{height:200}} />
+          <div className="card-body">
+  <h5 className="card-title">{meme.caption}</h5>
+  <p className="card-text">{meme.name}</p>
+</div>
+
+        </div>
+        })}
         </div>
       </div>
     );
